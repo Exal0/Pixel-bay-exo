@@ -396,7 +396,7 @@ usort($filesData, fn($a, $b) => $b['modTime'] <=> $a['modTime']);
 // --- Raccourcis rapides ---
 $quickLinks = [
     ['label' => 'phpinfo()',    'url' => '/info.php',             'icon' => 'info'],
-    ['label' => 'PhpMyAdmin',   'url' => '/phpmyadmin/',          'icon' => 'storage'],
+    ['label' => 'PhpMyAdmin',   'url' => 'http://localhost:8082/',          'icon' => 'storage'],
     ['label' => 'PHP.net',      'url' => 'https://www.php.net/manual/fr/', 'icon' => 'code'],
     ['label' => 'MySQL Docs',   'url' => 'https://dev.mysql.com/doc/',     'icon' => 'menu_book'],
 ];
@@ -1656,7 +1656,7 @@ if (empty($dockerVersion) && is_readable('/proc/version')) {
             </div>
 
             <!-- ========== 6. PHPMYADMIN ========== -->
-            <a href="/phpmyadmin/" target="_blank" class="bento__card bento__card--pma" title="Ouvrir PhpMyAdmin">
+            <a href="http://localhost:8082/" target="_blank" class="bento__card bento__card--pma" title="Ouvrir PhpMyAdmin">
                 <span class="material-icons card__external">open_in_new</span>
                 <div class="card__label">PhpMyAdmin</div>
                 <div class="service__inner">

@@ -1,30 +1,20 @@
 services:
 
-  # ==================================================
-  # SERVICE 1 : MySQL
-  # ==================================================
   mysql-server:
     image: mysql:8.4
     container_name: mysql-db
     volumes:
       - mysql_data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    # ⛔ optionnel : enlève ce port si pas besoin depuis le host
-    ports:
-      - "3307:3306"
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_password
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
-      timeout: 5s
-      retries: 3
+      retries: 5
 
-  # ==================================================
-  # SERVICE 2 : Apache + PHP
-  # ==================================================
   php-apache-server:
     build:
       context: .
@@ -32,32 +22,25 @@ services:
     container_name: php-apache
     volumes:
       - ./www:/var/www/html
-      - ./apache-config:/etc/apache2/sites-enabled
+      - ./apache-config/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
     ports:
-      - "8080:80"
-    environment:
-      DB_HOST: mysql-server
-      DB_DATABASE: ${MYSQL_DATABASE}
-      DB_USER: ${MYSQL_USER}
-      DB_PASS: ${MYSQL_PASSWORD}
+      - "80:80"
     depends_on:
       mysql-server:
         condition: service_healthy
 
-  # ==================================================
-  # SERVICE 3 : phpMyAdmin
-  # ==================================================
   phpmyadmin:
-    image: phpmyadmin:${PMA_VERSION}
+    image: phpmyadmin:5.2.2
     container_name: phpmyadmin
+    ports:
+      - "8082:80"
+    environment:
+      PMA_HOST: mysql-server
+      PMA_USER: root
+      PMA_PASSWORD: root
     depends_on:
       mysql-server:
         condition: service_healthy
-    environment:
-      PMA_HOST: mysql-server
-      PMA_PORT: 3306
-    ports:
-      - "8081:80"
 
 volumes:
   mysql_data:
